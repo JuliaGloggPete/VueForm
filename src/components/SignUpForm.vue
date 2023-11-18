@@ -1,9 +1,10 @@
 <template>
-    <form>
+    <form  @submit = "handleSubmit">
         <label> Email: </label>
         <input type="email" required v-model="email">
         <label> Password: </label>
         <input type="password" required v-model="password">
+        <div v-if="passwordError" class="Error"> {{ passwordError }}</div>
 
         <label> Role: </label>
         <select v-model="role">
@@ -15,24 +16,24 @@
             </option>
 
         </select>
+        <label>Skills:</label>
+        <input type="text" v-model="tempSkill" @keyup="addSkill">
+        <div v-for="skill in skills" :key="skill" class="pill" >
+
+            <span @click="deleteSkill(skill)"> {{ skill }} </span>
+        </div>
 
         <div class="terms">
             <input type="checkbox" v-model="terms" required>
             <label>Accept terms and conditions</label>
         </div>
 
-        <div>
-            <input type="checkbox" value="shaun" v-model="names">
-            <label> Shaun</label>
+        <div class="submit">
+            <button>submit</button>
+
+
         </div>
-        <div>
-            <input type="checkbox" value="mario" v-model="names">
-            <label> Mario</label>
-        </div>
-        <div>
-            <input type="checkbox" value="luigi" v-model="names">
-            <label> Luigi </label>
-        </div>
+
 
 
 
@@ -41,7 +42,6 @@
     <p>Password:{{ password }}</p>
     <p>Role:{{ role }}</p>
     <p>Terms: {{ terms }}</p>
-    <p>Names: {{ names }}</p>
 </template>
 
 
@@ -53,9 +53,54 @@ export default {
             password: '',
             role: '',
             terms: false,
-            names: []
+            tempSkill: '',
+            skills: [],
+            passwordError:''
+
+        }
+    },
+    methods: {
+        addSkill(e) {
+            if (e.key === ' ' && this.tempSkill){
+
+                //loopar sig igenom den redan befindliga
+
+                if (!this.skills.includes(this.tempSkill)){
+                    this.skills.push(this.tempSkill)
+
+                }
+
+
+        
+                this.tempSkill = ''
+            };
+        
+
+
+
+            console.log(e) 
+        },
+        deleteSkill(skill) {
+
+            this.skills = this.skills.filter((item) =>{
+
+                return skill !== item
+
+            })
+
+            },
+        handleSubmit(){
+            //validate password
+
+           //if (this.password.length <=5)
+
+           this.passwordError = this.password.length > 5 ? '' 
+           : 'Password must be at least 6 chars long'
+
+
         }
     }
+
 
 }
 
@@ -99,6 +144,40 @@ input[type="checkbox"] {
     margin: 0 10px 0 0;
     position: relative;
     top: 2px;
+}
+.pill{
+    display: inline-block;
+    margin: 20px 10px 0 0;
+    padding: 6px 12px;
+    background: #eee;
+    border-radius: 20px;
+    font-size: 12px;
+    letter-spacing: 1px;
+    font-weight: bold;
+    color: #777;
+    cursor: pointer;
+}
+button {
+background: #0b6dff;
+border: 0;
+padding: 10px 20px;
+margin-top: 20px;
+color: white;
+border-radius: 20px;
 
 }
+
+.submit{
+    text-align: center;
+}
+
+.error{
+    color: #ff0062;
+    margin-top: 10px;
+    font-size: 0.8em;
+    font-weight: bold;
+}
+
+
+
 </style>
